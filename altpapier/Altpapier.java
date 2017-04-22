@@ -31,7 +31,9 @@ public class Altpapier {
 
     // Construct a new GregorianCalendar initialized to the current date
     GregorianCalendar jetzt = new GregorianCalendar(); // auf null Uhr stellen
-    GregorianCalendar heute = new GregorianCalendar( jetzt.get(GregorianCalendar.YEAR), jetzt.get(GregorianCalendar.MONTH), jetzt.get(GregorianCalendar.DAY_OF_MONTH)); // auf null Uhr stellen
+    GregorianCalendar heute, starttag;
+    heute = new GregorianCalendar( jetzt.get(GregorianCalendar.YEAR), jetzt.get(GregorianCalendar.MONTH), jetzt.get(GregorianCalendar.DAY_OF_MONTH)); // auf null Uhr stellen
+    starttag = new GregorianCalendar( 2015, 0, 1); // auf null Uhr stellen
     /*
     heute.set(GregorianCalendar.HOUR, 0);        // 12-Stunden-Uhr
     heute.set(GregorianCalendar.HOUR_OF_DAY, 0); // 24-Stunden-Uhr
@@ -39,16 +41,18 @@ public class Altpapier {
     heute.set(GregorianCalendar.SECOND, 0);
     heute.set(GregorianCalendar.MILLISECOND, 0);
 */
-    Holtermine holtermine = new Holtermine(heute);
+    Holtermine holtermine = new Holtermine(starttag, heute);
 
-    GregorianCalendar letzterTag = new GregorianCalendar( heute.get(GregorianCalendar.YEAR)+1, heute.get(GregorianCalendar.MONTH),  1);
+    GregorianCalendar letzterTag = new GregorianCalendar( starttag.get(GregorianCalendar.YEAR)+1, starttag.get(GregorianCalendar.MONTH),  1);
 
+    holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Bio-Tonne       ", new GregorianCalendar(2014, 0,  7), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Graue Tonne     ", new GregorianCalendar(2014, 0,  1), letzterTag);
     holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Gelber Sack     ", new GregorianCalendar(2014, 0,  2), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Berlin Recycling", new GregorianCalendar(2014, 0, 22), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Veolia Altpapier", new GregorianCalendar(2014, 0, 14), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Bartscherer RTB ", new GregorianCalendar(2014, 0,  8), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Alba Pappy      ", new GregorianCalendar(2014, 0,  8), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Mahlow Waldblick", new GregorianCalendar(2014, 0, 10), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Berlin Recycling", new GregorianCalendar(2014, 0, 22), letzterTag); // Toscano Klinkhammer
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Veolia Altpapier", new GregorianCalendar(2014, 0, 14), letzterTag); // Mond Schostak Gerhard Käk
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Bartscherer RTB ", new GregorianCalendar(2014, 0,  9), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Alba Pappy      ", new GregorianCalendar(2014, 0,  8), letzterTag); // Arndt, Löw 23b
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Papier Waldblick", new GregorianCalendar(2014, 0, 24), letzterTag);
 
     holtermine.zeigeMonatstabellen( letzterTag);
 
@@ -116,20 +120,24 @@ class HTML {
 
 class Holtermine {
   private List<EinTermin> abholterminliste;
-  GregorianCalendar abHeute;
+  private GregorianCalendar abStart, nunHeute;
 
   Holtermine() {
     abholterminliste = new ArrayList<EinTermin>();
   }
 
-  Holtermine(GregorianCalendar abHeute) {
+  Holtermine(GregorianCalendar abStart, GregorianCalendar nunHeute) {
     this();
-    this.abHeute = abHeute;
+    this.abStart = abStart;
+    this.nunHeute = nunHeute;
   }
 
   int marke = 0;
-  String formatFirma_00 = "%-8s ";   // %-x.ys - linksbündig x breite y Feldbreite 
-  String formatNummer_0 = "%2d     ";
+  String formatFirma_Alltag = "%-8s ";   // %-x.ys - linksbündig x breite y Feldbreite 
+  String formatFirma_Heute = "<strong style=\"background-color:cyan\">" + formatFirma_Alltag + "</strong>";
+  String formatNummer_Alltag = "<span style=\"background-color:yellow\">%2d</span>";
+  String formatNummer_Sonntag = "<span style=\"background-color:orangered\">%2d</span>";
+  String formatNummer_Heute = "<span style=\"background-color:lightblue\">%2d</span>";
 
   /**
    * Schiebe eventuell "marke" vorwärts und liefere die Tagesnummer oder den Firmennamen.
@@ -141,12 +149,16 @@ class Holtermine {
     String formatFirma, formatNummer;
     String erg = "";
     EinTermin suchMarke = new EinTermin("", laufenderTag);
-    if (laufenderTag.compareTo( abHeute) == 0) {
-      formatNummer = "<strong style=\"background-color:magenta\">" + formatNummer_0 + "</strong>";
-      formatFirma = "<strong style=\"background-color:magenta\">" + formatFirma_00 + "</strong>";
+    if (laufenderTag.compareTo( nunHeute) == 0) {
+      formatNummer = formatNummer_Heute;
+      formatFirma = formatFirma_Heute;
     } else {
-      formatNummer = formatNummer_0;
-      formatFirma = formatFirma_00;
+        if (laufenderTag.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY) {
+           formatNummer = formatNummer_Sonntag;
+	} else {
+           formatNummer = formatNummer_Alltag;
+	}
+      formatFirma = formatFirma_Alltag;
     }
     while (marke < abholterminliste.size()) {
       EinTermin heuMarke = abholterminliste.get(marke);
@@ -166,7 +178,7 @@ class Holtermine {
       }
     }
     //return String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
-    erg += String.format("Dies sollte nicht erscheinen %02d", laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
+    erg += String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
     return erg;
   }
 
@@ -181,7 +193,7 @@ class Holtermine {
           laufenderMonat.get(GregorianCalendar.MONTH),
           laufenderMonat.get(GregorianCalendar.DAY_OF_MONTH)
       );
-      if (neuerTermin.compareTo(abHeute) >= 0)
+      if (neuerTermin.compareTo(abStart) >= 0)
         zurListe(new EinTermin(firma, neuerTermin));
     }
   }
@@ -196,8 +208,8 @@ class Holtermine {
     Collections.sort(abholterminliste);
     System.out.println( "<pre>");
     for (EinTermin einTermin : abholterminliste) {
-      if (abHeute.compareTo(einTermin.getGregorianCalEnder()) == 0) {
-	      System.out.println( new EinTermin( "######################### heute", abHeute).toString());
+      if (abStart.compareTo(einTermin.getGregorianCalEnder()) == 0) {
+	      System.out.println( new EinTermin( "######################### heute", abStart).toString());
       }
       System.out.println(einTermin.toString());
     }
@@ -212,9 +224,9 @@ class Holtermine {
   void zeigeMonatstabellen( GregorianCalendar allerletzterTag) {
     Collections.sort(abholterminliste);
     GregorianCalendar laufenderMonat = new GregorianCalendar(
-        abHeute.get(GregorianCalendar.YEAR),
-        abHeute.get(GregorianCalendar.MONTH),
-        1 // abHeute.get(GregorianCalendar.DAY_OF_MONTH)
+        abStart.get(GregorianCalendar.YEAR),
+        abStart.get(GregorianCalendar.MONTH),
+        1 // abStart.get(GregorianCalendar.DAY_OF_MONTH)
     );
     String erg = "";
     erg += HTML.utf_8;
@@ -247,32 +259,27 @@ class Holtermine {
 
       rest = (5 + laufenderTag.get(GregorianCalendar.DAY_OF_WEEK)) % 7;
       erg += HTML.trAnfang;
-      for (int ii = rest; ii > 0; ii--) { // unvollständige Woche am Anfang des Monats
+      for (int ii = rest; ii > 0; ii--) { // leere Kästchen vor Monatsbeginn
         erg += HTML.tdAnfang;
-        erg += String.format(formatFirma_00, "..");
+        erg += String.format(formatFirma_Alltag, "..");
         erg += HTML.tdEnde;
       }
-      for (;                             // vollständige Wochen im Inneren des Monats
+      for (;                             // gefüllte Kästchen im Inneren des Monats
            laufenderTag.compareTo(ultimo) < 0;
            laufenderTag.add(GregorianCalendar.DAY_OF_MONTH, 1)) {
         erg += HTML.tdAnfang;
         erg += this.nächsterTagOderFirma(laufenderTag);
         erg += HTML.tdEnde;
-        // erg += String.format("%02d ", laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
-        if (laufenderTag.get(GregorianCalendar.DAY_OF_WEEK) == 1) {
+        if (laufenderTag.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY) {
           erg += HTML.trEnde;
-          erg +=
-              // " " + (1 + laufenderTag.get(GregorianCalendar.MONTH))
-              // + " " + laufenderTag.get(GregorianCalendar.YEAR)
-              // +
-              "\n";
+          erg += "\n";
           erg += HTML.trAnfang;
         }
       }
       rest = (9 - laufenderTag.get(GregorianCalendar.DAY_OF_WEEK)) % 7;
-      for (int ii = rest; ii > 0; ii--) { // unvollständige Woche am Ende des Monats
+      for (int ii = rest; ii > 0; ii--) { // leere Kästchen nach Monatsende 
         erg += HTML.tdAnfang;
-        erg += String.format(formatFirma_00, "..");
+        erg += String.format(formatFirma_Alltag, "..");
         erg += HTML.tdEnde;
       }
       erg += HTML.trEnde;
