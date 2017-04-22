@@ -5,13 +5,13 @@ git config --global user.email "gerdkolano@wp.pl"
 git config --global user.name gerdkolano
 git config --global credential.helper 'cache --timeout=360000'
 
-## Im Browser:
-## https://github.com/gerdkolano/
-## Sign in
-## gerdkolano g körperteil
-## New
-## Altpapier # Repository name
-## Abfuhrtermine der Wertstoffe # Description
+ ## Im Browser:
+ ## https://github.com/gerdkolano/
+ ## Sign in
+ ## gerdkolano g körperteil
+ ## New
+ ## Altpapier # Repository name
+ ## Abfuhrtermine der Wertstoffe # Description
 
 git init
 git add .
