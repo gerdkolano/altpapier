@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.text.DateFormatSymbols;
 import java.util.List;
 
 /**
@@ -33,7 +35,8 @@ public class Altpapier {
     GregorianCalendar jetzt = new GregorianCalendar(); // auf null Uhr stellen
     GregorianCalendar heute, starttag;
     heute = new GregorianCalendar( jetzt.get(GregorianCalendar.YEAR), jetzt.get(GregorianCalendar.MONTH), jetzt.get(GregorianCalendar.DAY_OF_MONTH)); // auf null Uhr stellen
-    starttag = new GregorianCalendar( 2015, 0, 1); // auf null Uhr stellen
+//  starttag = new GregorianCalendar( 2015, 0, 1); // auf null Uhr stellen
+    starttag = new GregorianCalendar( jetzt.get(GregorianCalendar.YEAR), jetzt.get(GregorianCalendar.MONTH), 1); // auf null Uhr stellen
     /*
     heute.set(GregorianCalendar.HOUR, 0);        // 12-Stunden-Uhr
     heute.set(GregorianCalendar.HOUR_OF_DAY, 0); // 24-Stunden-Uhr
@@ -44,15 +47,24 @@ public class Altpapier {
     Holtermine holtermine = new Holtermine(starttag, heute);
 
     GregorianCalendar letzterTag = new GregorianCalendar( starttag.get(GregorianCalendar.YEAR)+1, starttag.get(GregorianCalendar.MONTH),  1);
-
-    holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Bio-Tonne       ", new GregorianCalendar(2014, 0,  7), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Graue Tonne     ", new GregorianCalendar(2014, 0,  1), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(2, "Gelber Sack     ", new GregorianCalendar(2014, 0,  2), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Berlin Recycling", new GregorianCalendar(2014, 0, 22), letzterTag); // Toscano Klinkhammer
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Veolia Altpapier", new GregorianCalendar(2014, 0, 14), letzterTag); // Mond Schostak Gerhard Käk
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Bartscherer RTB ", new GregorianCalendar(2014, 0,  9), letzterTag);
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Alba Pappy      ", new GregorianCalendar(2014, 0,  8), letzterTag); // Arndt, Löw 23b
-    holtermine.fügeAbholtermineEinerFirmaHinzu(4, "Papier Waldblick", new GregorianCalendar(2014, 0, 24), letzterTag);
+    //                                                                                                         Jahr Monat Tag
+    //                         Abstand in Wochen, Papier                                                            0-11     
+    holtermine.fügeAbholtermineEinerFirmaHinzu(2, false, "Bio-Tonne       "         , new GregorianCalendar(2014, 1-1,  7), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(2, false, "Graue Tonne     "         , new GregorianCalendar(2014, 1-1,  1), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(2, false, "Gelber Sack     "         , new GregorianCalendar(2014, 1-1,  2), letzterTag);
+    //ltermine.fügeAbholtermineEinerFirmaHinzu(2, false, "Gelber Sack     "         , new GregorianCalendar(2014, 1-1,  9), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L22 28b Berlin Recycling" , new GregorianCalendar(2014, 1-1, 22), letzterTag); // Toscano Klinkhammer
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L19 19a 24b 28 29 Veolia" , new GregorianCalendar(2015, 1-1, 13), letzterTag); // Mond Schostak Gerhard Kauter Thies
+    //ltermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L29 Bartscherer RTB"      , new GregorianCalendar(2014, 1-1,  9), letzterTag);
+    //ltermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L29 Bartscherer RTB"      , new GregorianCalendar(2014, 1-1, 23), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L29 Bartscherer RTB"      , new GregorianCalendar(2014, 1-1, 30), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L21 23b Alba Pappy"       , new GregorianCalendar(2014, 1-1,  8), letzterTag); // Arndt, Löw 23b
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "L24 27 Alba"              , new GregorianCalendar(2014, 1-1,  8), letzterTag); // Grupe, Löw 27vorn
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "Waldblick"                , new GregorianCalendar(2014, 1-1, 24), letzterTag);
+    holtermine.fügeAbholtermineEinerFirmaHinzu(4, true , "Goltz"                    , new GregorianCalendar(2015, 8-1, 19), letzterTag);
+    // Bartscherer war am 3.März 2016 da
+    // Bartscherer war am 20.August 2015 nicht da
+    //ltermine.fügeAbholtermineEinerFirmaHinzu(4, "Bartscherer RTB "    , new GregorianCalendar(2014, 1-1,  9), letzterTag);
 
     holtermine.zeigeMonatstabellen( letzterTag);
 
@@ -63,19 +75,30 @@ public class Altpapier {
 
     System.out.println("Das 21ste Jahrhundert ist am \"" + today + "\" "
         + (diff / (1000 * 60 * 60 * 24)) + " Tage alt.");
-    System.out.println(" ");
+    System.out.println("<br />");
+
+    System.out.println("Alba<br />");
+    System.out.println("wget -O- 'http://trenntstadt-berlin.de/api-abfuhr.php?adrkey=6973669&amp;step=2' | perl -pne 's/([{},])/$1\\n/g'<br />");
+    System.out.println("Veolia Tour 2<br />");
+    System.out.println("wget -O- 'http://www.veolia-umweltservice.de/assets/Downloads/RegionalerService/Leerungstermine-2016-Blaue-Tonne-Berlin.pdf'<br />");
 
   }
 }
 
 class EinTermin implements Comparable<EinTermin> {
+  private boolean papierTag;
   private String firma;
   private GregorianCalendar gZeitpunkt;
   //private long zeitpunkt;
 
-  EinTermin(String firma, GregorianCalendar gZeitpunkt) {
-    this.firma = firma;
+  EinTermin( boolean papierTag, String firma, GregorianCalendar gZeitpunkt) {
+    this.papierTag  = papierTag;
+    this.firma      = firma;
     this.gZeitpunkt = gZeitpunkt;
+  }
+
+  public boolean getPapierTag() {
+    return this.papierTag;
   }
 
   public GregorianCalendar getGregorianCalEnder() {
@@ -111,6 +134,12 @@ class EinTermin implements Comparable<EinTermin> {
 }
 
 class HTML {
+  // <!DOCTYPE html>
+  static public String head = "<!DOCTYPE html><html><head>";
+  static public String title = "<title>Altpapier</title>";
+  static public String favicon = "<link rel=\"shortcut icon\" href=\"favicon.ico\" type=\"image/x-icon\"/>";
+  static public String body = "</head><body>";
+  
   static public String utf_8 = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
   static public String tdAnfangspan = "<td colspan=\"7\" align=\"center\" >";
   static public String tdAnfang = "<td>", tdEnde = "</td>";
@@ -121,6 +150,8 @@ class HTML {
 class Holtermine {
   private List<EinTermin> abholterminliste;
   private GregorianCalendar abStart, nunHeute;
+  private Locale locale = new Locale("de");
+  private String[]wochentagsname;
 
   Holtermine() {
     abholterminliste = new ArrayList<EinTermin>();
@@ -130,25 +161,28 @@ class Holtermine {
     this();
     this.abStart = abStart;
     this.nunHeute = nunHeute;
+    this.locale = new Locale("de");
+    this.wochentagsname = new DateFormatSymbols(locale).getShortWeekdays();
   }
 
   int marke = 0;
-  String formatFirma_Alltag = "%-8s ";   // %-x.ys - linksbündig x breite y Feldbreite 
-  String formatFirma_Heute = "<strong style=\"background-color:cyan\">" + formatFirma_Alltag + "</strong>";
-  String formatNummer_Alltag = "<span style=\"background-color:yellow\">%2d</span>";
-  String formatNummer_Sonntag = "<span style=\"background-color:orangered\">%2d</span>";
-  String formatNummer_Heute = "<span style=\"background-color:lightblue\">%2d</span>";
+  String formatFirma_Alltag     = "%-8s ";   // %-x.ys - linksbündig x breite y Feldbreite 
+  String formatFirma_Heute      =  "<strong style=\"background-color:cyan\">"   + formatFirma_Alltag + "</strong>";
+  String formatNummer_Alltag    =  "<span style=\"background-color:yellow\"   >%2d %s</span>";
+  String formatNummer_Papiertag =  "<span style=\"background-color:blue\"     >%2d %s</span>";
+  String formatNummer_Sonntag   =  "<span style=\"background-color:orangered\">%2d %s</span>";
+  String formatNummer_Heute     =  "<span style=\"background-color:lightblue\">%2d %s</span>";
 
   /**
    * Schiebe eventuell "marke" vorwärts und liefere die Tagesnummer oder den Firmennamen.
    *
+   * @param papierTag
    * @param laufenderTag
    * @return
    */
   String nächsterTagOderFirma(GregorianCalendar laufenderTag) {
     String formatFirma, formatNummer;
-    String erg = "";
-    EinTermin suchMarke = new EinTermin("", laufenderTag);
+    //EinTermin suchMarke = new EinTermin( false, "", laufenderTag);
     if (laufenderTag.compareTo( nunHeute) == 0) {
       formatNummer = formatNummer_Heute;
       formatFirma = formatFirma_Heute;
@@ -160,6 +194,8 @@ class Holtermine {
 	}
       formatFirma = formatFirma_Alltag;
     }
+    String erg = "";
+    boolean einPapierTag = false;
     while (marke < abholterminliste.size()) {
       EinTermin heuMarke = abholterminliste.get(marke);
       GregorianCalendar heuTag = heuMarke.getGregorianCalEnder();
@@ -168,21 +204,27 @@ class Holtermine {
       if (vergleichsergebnis < 0)
         marke++;
       if (vergleichsergebnis == 0) {
+        einPapierTag = heuMarke.getPapierTag();
         erg += String.format(formatFirma, abholterminliste.get(marke).firma());
 	marke++;
 	continue;
       }
+      String tagesname = wochentagsname[laufenderTag.get(GregorianCalendar.DAY_OF_WEEK)];
       if (vergleichsergebnis > 0) {
-        erg += String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
+        if (einPapierTag) {
+          formatNummer = formatNummer_Papiertag;
+        } else {
+        }
+        erg += String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH), tagesname);
 	return erg;
       }
     }
     //return String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
-    erg += String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH));
+    erg += String.format(formatNummer, laufenderTag.get(GregorianCalendar.DAY_OF_MONTH), "xx");
     return erg;
   }
 
-  public void fügeAbholtermineEinerFirmaHinzu(int intervall, String firma,
+  public void fügeAbholtermineEinerFirmaHinzu(int intervall, boolean einPapierTag, String firma,
                                               GregorianCalendar laufenderMonat, GregorianCalendar Ende) {
     GregorianCalendar zeitpunkt;
     for (;
@@ -194,7 +236,7 @@ class Holtermine {
           laufenderMonat.get(GregorianCalendar.DAY_OF_MONTH)
       );
       if (neuerTermin.compareTo(abStart) >= 0)
-        zurListe(new EinTermin(firma, neuerTermin));
+        zurListe(new EinTermin( einPapierTag, firma, neuerTermin));
     }
   }
 
@@ -209,7 +251,7 @@ class Holtermine {
     System.out.println( "<pre>");
     for (EinTermin einTermin : abholterminliste) {
       if (abStart.compareTo(einTermin.getGregorianCalEnder()) == 0) {
-	      System.out.println( new EinTermin( "######################### heute", abStart).toString());
+	      System.out.println( new EinTermin( false, "######################### heute", abStart).toString());
       }
       System.out.println(einTermin.toString());
     }
@@ -217,7 +259,7 @@ class Holtermine {
   }
 
   String[] monatsName = {
-      "Januar", "Februar", "März", "April",
+      "Januar", "Februar", "M&auml;rz", "April",
       "Mai", "Juni", "Juli", "August",
       "September", "Oktober", "November", "Dezember"};
 
@@ -229,7 +271,12 @@ class Holtermine {
         1 // abStart.get(GregorianCalendar.DAY_OF_MONTH)
     );
     String erg = "";
-    erg += HTML.utf_8;
+    erg += HTML.head    + "\n";
+    erg += HTML.utf_8   + "\n";
+    erg += HTML.title   + "\n";
+    erg += HTML.favicon + "\n";
+    erg += HTML.body    + "\n";
+    erg += "<img src=\"favicon.ico\" />";
     erg += "\n";
     erg += HTML.tableAnfang;
     erg += "\n";
@@ -351,4 +398,7 @@ Wikipedia Lichtenberg
     Ostergrenze (Osterentfernung in Tagen):           OE(OG,SZ) = 7 − (OG − SZ) mod 7
 10. das Datum des Ostersonntags als Märzdatum
     (32. März = 1. April usw.):                              OS = OG + OE
+
+wget -O- 'http://trenntstadt-berlin.de/api-abfuhr.php?adrkey=6973669&step=2' | perl -pne 's/([{},])/$1\n/g'
+
 */
