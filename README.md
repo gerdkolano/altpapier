@@ -29,3 +29,6 @@ git clone https://github.com/gerdkolano/altpapier.git
 javac altpapier/altpapier/Altpapier.java && java -classpath altpapier altpapier.Altpapier  > altpapier/abholtermine.html
 php altpapier/abholtermine.php | less
 
+remove unwanted swap files
+git ls-files | grep '\.swp$' | xargs git rm
+
