@@ -19,3 +19,5 @@ git commit -m "erstes commit"
 git remote add origin https://github.com/gerdkolano/altpapier.git
 git add .
 git commit -m "README.md 3"
+
+git push -u origin master
