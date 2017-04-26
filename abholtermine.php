@@ -1,6 +1,18 @@
 <?php
-$wd = "/var/www/html/erprobe/altpapier";
-$zd = "/var/www/html/erprobe/altpapier";
+$host = trim( `uname -n`);
+if ($host == "fadi" or $host == "zoe" or $host == "gerd.dyndns.za.net") {
+  $wd = "/daten/srv/www/htdocs/erprobe/altpapier";
+  $zd = "/daten/srv/www/htdocs/erprobe/altpapier";
+} else {
+  if ($host == "franzimint") {
+    $wd = "/var/www/html/erprobe/altpapier";
+    $zd = "/var/www/html/erprobe/altpapier";
+  } else {
+    echo "\$host == \"$host\"<br />\n";
+    exit( 1);
+  }
+}
+echo "\$host == \"$host\" \$wd == \"$wd\"\n";
 system( "java -classpath $wd altpapier.Altpapier");
 ?>
 <p>
