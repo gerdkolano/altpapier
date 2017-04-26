@@ -13,18 +13,23 @@ git config --global credential.helper 'cache --timeout=360000'
 \## Altpapier # Repository name
 \## Abfuhrtermine der Wertstoffe # Description
 
+pushd /var/www/html/erprobe/altpapier
 git init
 git add .
 git commit -m "erstes commit"
 git remote add origin https://github.com/gerdkolano/altpapier.git
 
+pushd /daten/srv/www/htdocs/erprobe/altpapier/
+pushd /var/www/html/erprobe/altpapier
 git add .
-git commit -m "README.md 3"
+git commit -m "README.md 10"
 git push -u origin master
 
-Eine Kopie herstellen und nutzen
+Eine Kopie auf fadi oder zoe herstellen und nutzen
+Dort einloggen, dann:
 
-cd /tmp
+pushd /daten/srv/www/htdocs/erprobe/
+mv altpapier zu-loeschen-altpapier
 git clone https://github.com/gerdkolano/altpapier.git
 javac altpapier/altpapier/Altpapier.java && java -classpath altpapier altpapier.Altpapier  > altpapier/abholtermine.html
 php altpapier/abholtermine.php | less
